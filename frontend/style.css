@@ -184,3 +184,113 @@ footer {
 .fade.show {
     opacity: 1;
 }
+
+/* ================= ADVANCED CARDS ================= */
+
+#advanced-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.card {
+    background: #0a0a0a;
+    border: 1px solid #111;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,255,255,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+.card h3 {
+    color: #00ffff;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Dynamic colors */
+.green {
+    color: #00ff7f;
+    text-shadow: 0 0 6px #00ff7f;
+}
+
+.red {
+    color: #ff4d4d;
+    text-shadow: 0 0 6px #ff4d4d;
+}
+
+.yellow {
+    color: #ffd700;
+    text-shadow: 0 0 6px #ffd700;
+}
+
+/* ================= BUTTONS ================= */
+
+button {
+    background: #0f0f0f;
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+/* ================= BLOOMBERG SIDE PANEL ================= */
+
+#side-panel {
+    position: fixed;
+    right: 0;
+    top: 80px;
+    width: 280px;
+    height: calc(100% - 100px);
+    background: rgba(0,0,0,0.85);
+    border-left: 2px solid #00ffff;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: -5px 0 15px rgba(0,255,255,0.2);
+}
+
+#side-panel h2 {
+    color: #00ffff;
+    margin-bottom: 15px;
+}
+
+.side-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #111;
+    border-radius: 8px;
+    border: 1px solid #222;
+}
+
+.side-item strong {
+    color: #00ffff;
+}
+
+/* ================= SPARKLINE ================= */
+
+.sparkline {
+    width: 100%;
+    height: 40px;
+}

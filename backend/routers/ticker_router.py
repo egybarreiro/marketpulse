@@ -1,5 +1,7 @@
 ﻿from fastapi import APIRouter
-from services.alpha_service import fetch_alpha_quotes
+from backend.services.alpha_service import fetch_alpha_quotes
+from backend.services.fmp_service import fetch_fmp_quotes
+
 
 router = APIRouter(prefix="/ticker", tags=["ticker"])
 

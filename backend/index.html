@@ -1,0 +1,37 @@
+﻿<script>
+async function fetchGooglePrice(symbol) {
+    const url = https://www.google.com/finance/quote/:NASDAQ;
+
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const priceElement = doc.querySelector(".YMlKec");
+
+        if (!priceElement) return "N/A";
+
+        return priceElement.textContent;
+    } catch (e) {
+        return "N/A";
+    }
+}
+
+async function updateTicker() {
+    const symbols = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL"];
+
+    let tickerHTML = "";
+
+    for (const symbol of symbols) {
+        const price = await fetchGooglePrice(symbol);
+        tickerHTML += <span>: </span> | ;
+    }
+
+    document.getElementById("ticker-content").innerHTML = tickerHTML;
+}
+
+updateTicker();
+setInterval(updateTicker, 15000);
+</script>

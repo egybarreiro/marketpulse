@@ -1,0 +1,45 @@
+﻿# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+*.ipynb_convert/
+*.ipynb.tmp
+
+# ---- FastAPI / Uvicorn ----
+*.log
+*.db
+
+# ---- VS Code ----
+.vscode/
+
+# ---- OS / Editor files ----
+.DS_Store
+Thumbs.db
+
+# ---- Build / Cache ----
+build/
+dist/
+*.egg-info/
+
+# ---- Node / Frontend (if added later) ----
+node_modules/
+
+# ---- Environment / Secrets ----
+.env
+.env.*
+*.env
+
+# ---- Project-specific ----
+backend/models/
+backend/data/

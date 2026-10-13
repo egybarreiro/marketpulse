@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPulse</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+    <header>
+        <div class="logo-container">
+            <img src="marketpulse-logo.png" alt="MarketPulse Logo" class="logo" id="marketpulse-logo">
+        </div>
+
+        <h1>MarketPulse</h1>
+
+        <!-- DESCRIPCIÓN BREVE -->
+        <p id="subtitle" class="subtitle">
+            MarketPulse es una app interactiva que muestra precios en tiempo real y genera señales predictivas basadas en vectores de mercado.
+        </p>
+
+        <!-- SELECTOR DE IDIOMA REUBICADO -->
+        <div class="language-container">
+            <label for="language" id="language-label">Language:</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="zh">中文 (Chinese)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="ar">العربية (Arabic)</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- ================= TICKER ================= -->
+    <div class="ticker-bar">
+        <div id="ticker-content" class="ticker-content">
+            <span class="ticker-item">Loading ticker...</span>
+            <span class="ticker-item">Please wait...</span>
+            <span class="ticker-item">Fetching market data...</span>
+        </div>
+    </div>
+
+    <!-- ================= ECG LINE ================= -->
+    <div class="ecg-line"></div>
+
+    <!-- ================= MAIN ================= -->
+    <main>
+
+        <!-- INPUT SECTION -->
+        <div class="input-section box">
+
+            <!-- INSTRUCCIONES -->
+            <p id="instructions" class="instructions">
+                Ingresa un vector de features, selecciona el horizonte y presiona “Generar señal” para obtener una predicción.
+            </p>
+
+            <label for="features">Vector de features:</label>
+            <textarea id="features" placeholder="1.2, 3.4, 5.6"></textarea>
+
+            <label for="horizon">Horizonte:</label>
+            <select id="horizon">
+                <option value="1">1 día</option>
+                <option value="5">5 días</option>
+                <option value="10">10 días</option>
+                <option value="30">30 días</option>
+            </select>
+
+            <button id="predict-btn">Generar señal</button>
+        </div>
+
+        <!-- OUTPUT SECTION -->
+        <div class="output-section box">
+            <h3>Predicción</h3>
+            <div id="prediction-box"></div>
+        </div>
+
+        <!-- SIGNAL SECTION -->
+        <div class="signal-section box">
+            <h3>Señal</h3>
+            <div id="signal-box"></div>
+        </div>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        <p class="powered-by">
+            Powered by <span class="footer-name">Lycan</span> <span class="footer-eabs">(EABS)</span>
+        </p>
+
+        <p id="disclaimer" class="disclaimer">
+            ⚠️ Nota importante: Los modelos entrenados aquí NO garantizan ganancias en la bolsa.
+            El mercado financiero es volátil y no estacionario.
+            Cualquier decisión de inversión debe hacerse con responsabilidad personal.
+        </p>
+    </footer>
+
+    <!-- ================= JS ================= -->
+    <script src="script.js"></script>
+    <script src="translations.js"></script>
+
+</body>
+</html>

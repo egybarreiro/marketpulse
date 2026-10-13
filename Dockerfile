@@ -2,20 +2,21 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Fuerza reconstrucción de dependencias
+# Copiar requirements primero
 COPY backend/requirements.txt /app/backend/requirements.txt
 
-# Copia backend completo
+# Forzar reconstrucción de dependencias SIEMPRE
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r /app/backend/requirements.txt
+
+# Copiar backend completo
 COPY backend/ /app/backend/
 
-# Copia colab
+# Copiar colab
 COPY backend/colab/ /app/backend/colab/
 
-# Copia frontend
+# Copiar frontend
 COPY frontend/ /app/frontend/
-
-# Instala dependencias
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 
 EXPOSE 8080
 

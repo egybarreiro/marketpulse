@@ -4,3 +4,9 @@ yfinance
 joblib
 requests
 pydantic
+xgboost==1.7.6
+pandas
+scipy
+matplotlib
+seaborn
+scikit-learn

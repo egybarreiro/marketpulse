@@ -52,7 +52,7 @@ header h1 {
     text-shadow: 0 0 2px #00ffff55;
 }
 
-/* ================= TICKER (MEJORADO) ================= */
+/* ================= TICKER ================= */
 .ticker-bar {
     background: #161b22;
     padding: 10px;
@@ -64,7 +64,7 @@ header h1 {
 .ticker-content {
     display: inline-block;
     white-space: nowrap;
-    animation: tickerMove 180s linear infinite; /* ← velocidad reducida */
+    animation: tickerMove 180s linear infinite;
 }
 
 @keyframes tickerMove {
@@ -77,18 +77,12 @@ header h1 {
     font-weight: bold;
     font-size: 16px;
     padding-right: 40px;
-    font-family: "Roboto Mono", monospace; /* estilo financiero */
+    font-family: "Roboto Mono", monospace;
     letter-spacing: 0.5px;
 }
 
-/* Colores opcionales si luego quieres flechas ↑ ↓ */
-.ticker-item.up {
-    color: #4caf50;
-}
-
-.ticker-item.down {
-    color: #f44336;
-}
+.ticker-item.up { color: #4caf50; }
+.ticker-item.down { color: #f44336; }
 
 /* ================= ECG LINE ================= */
 .ecg-line {
@@ -175,7 +169,7 @@ footer {
     line-height: 1.4em;
 }
 
-/* ================= FADE ANIMATION ================= */
+/* ================= FADE ================= */
 .fade {
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -186,7 +180,6 @@ footer {
 }
 
 /* ================= ADVANCED CARDS ================= */
-
 #advanced-cards {
     display: flex;
     flex-wrap: wrap;
@@ -221,24 +214,11 @@ footer {
     font-weight: bold;
 }
 
-/* Dynamic colors */
-.green {
-    color: #00ff7f;
-    text-shadow: 0 0 6px #00ff7f;
-}
-
-.red {
-    color: #ff4d4d;
-    text-shadow: 0 0 6px #ff4d4d;
-}
-
-.yellow {
-    color: #ffd700;
-    text-shadow: 0 0 6px #ffd700;
-}
+.green { color: #00ff7f; text-shadow: 0 0 6px #00ff7f; }
+.red { color: #ff4d4d; text-shadow: 0 0 6px #ff4d4d; }
+.yellow { color: #ffd700; text-shadow: 0 0 6px #ffd700; }
 
 /* ================= BUTTONS ================= */
-
 button {
     background: #0f0f0f;
     border: 1px solid #00ffff;
@@ -258,39 +238,28 @@ button:hover {
 
 /* ================= BLOOMBERG SIDE PANEL ================= */
 
+/* Oculto por defecto */
 #side-panel {
     position: fixed;
-    right: 0;
+    right: -280px;
     top: 80px;
     width: 280px;
-    height: calc(100% - 100px);
+    height: calc(100% - 160px); /* ← antes era 100px, ahora deja espacio para el footer */
     background: rgba(0,0,0,0.85);
     border-left: 2px solid #00ffff;
     padding: 20px;
     overflow-y: auto;
     box-shadow: -5px 0 15px rgba(0,255,255,0.2);
+    transition: right 0.3s ease;
+    display: none;
 }
 
-#side-panel h2 {
-    color: #00ffff;
-    margin-bottom: 15px;
+/* Activo cuando el usuario lo habilita */
+#side-panel.active {
+    display: block;
 }
 
-.side-item {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #111;
-    border-radius: 8px;
-    border: 1px solid #222;
-}
-
-.side-item strong {
-    color: #00ffff;
-}
-
-/* ================= SPARKLINE ================= */
-
-.sparkline {
-    width: 100%;
-    height: 40px;
+/* Hover: desliza */
+#side-panel.active:hover {
+    right: 0;
 }

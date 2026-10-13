@@ -6,140 +6,133 @@
     <title>MarketPulse</title>
 
     <link rel="stylesheet" href="style.css">
-
-    <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-    <!-- ================= HEADER ================= -->
-    <header>
-        <div class="logo-container">
-            <img src="marketpulse-logo.png" alt="MarketPulse Logo" class="logo" id="marketpulse-logo">
-        </div>
+<header>
+    <div class="logo-container">
+        <img src="marketpulse-logo.png" alt="MarketPulse Logo" class="logo" id="marketpulse-logo">
+    </div>
 
-        <h1>MarketPulse</h1>
+    <h1>MarketPulse</h1>
 
-        <p id="subtitle" class="subtitle">
-            MarketPulse es una app interactiva que muestra precios en tiempo real y genera señales predictivas basadas en vectores de mercado.
+    <p id="subtitle" class="subtitle">
+        MarketPulse es una app interactiva que muestra precios en tiempo real y genera señales predictivas basadas en vectores de mercado.
+    </p>
+
+    <div class="language-container">
+        <label for="language" id="language-label">Language:</label>
+        <select id="language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="zh">中文 (Chinese)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="ar">العربية (Arabic)</option>
+        </select>
+    </div>
+</header>
+
+<div class="ticker-bar">
+    <div id="ticker-content" class="ticker-content">
+        <span id="ticker-text" class="ticker-item">Loading ticker...</span>
+    </div>
+</div>
+
+<div class="ecg-line"></div>
+
+<div id="side-panel">
+    <h2>Panel Técnico</h2>
+    <div id="side-content"></div>
+</div>
+
+<main>
+
+    <div class="input-section box">
+        <p id="instructions" class="instructions">
+            Ingresa un vector de features, selecciona el horizonte y presiona “Generar señal”.
         </p>
 
-        <div class="language-container">
-            <label for="language" id="language-label">Language:</label>
-            <select id="language">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="zh">中文 (Chinese)</option>
-                <option value="hi">हिन्दी (Hindi)</option>
-                <option value="ar">العربية (Arabic)</option>
-            </select>
-        </div>
-    </header>
+        <label for="features">Vector de features:</label>
+        <textarea id="features" placeholder="1.2, 3.4, 5.6"></textarea>
 
-    <!-- ================= TICKER ================= -->
-    <div class="ticker-bar">
-        <div id="ticker-content" class="ticker-content">
-            <span class="ticker-item">Loading ticker...</span>
+        <label for="horizon">Horizonte:</label>
+        <select id="horizon">
+            <option value="1">1 día</option>
+            <option value="5">5 días</option>
+            <option value="10">10 días</option>
+            <option value="30">30 días</option>
+        </select>
+
+        <button id="predict-btn">Generar señal</button>
+    </div>
+
+    <div class="input-section box">
+        <h3>Subir Dataset (CSV)</h3>
+        <input type="file" id="datasetInput" accept=".csv">
+        <button id="upload-btn">Subir Dataset</button>
+    </div>
+
+    <div class="input-section box">
+        <h3>Analizar Ticker</h3>
+        <input type="text" id="tickerInput" placeholder="AAPL, TSLA, MSFT">
+        <button id="ticker-btn">Analizar Ticker</button>
+
+        <div class="advanced-options">
+            <label><input type="checkbox" id="show-cards"> Mostrar tarjetas avanzadas</label>
+            <label><input type="checkbox" id="show-charts"> Mostrar gráficos</label>
+            <label><input type="checkbox" id="show-spark"> Mostrar sparkline</label>
+            <label><input type="checkbox" id="show-panel"> Panel Bloomberg</label>
         </div>
     </div>
 
-    <div class="ecg-line"></div>
-
-    <!-- ================= BLOOMBERG SIDE PANEL ================= -->
-    <div id="side-panel">
-        <h2>Panel Técnico</h2>
-        <div id="side-content"></div>
+    <div class="output-section box">
+        <h3>Predicción</h3>
+        <div id="prediction-box"></div>
     </div>
 
-    <!-- ================= MAIN ================= -->
-    <main>
+    <div class="signal-section box">
+        <h3>Señal</h3>
+        <div id="signal-box"></div>
+    </div>
 
-        <div class="input-section box">
-            <p id="instructions" class="instructions">
-                Ingresa un vector de features, selecciona el horizonte y presiona “Generar señal”.
-            </p>
+    <div class="output-section box">
+        <h3>Resultados</h3>
+        <div id="results"></div>
+    </div>
 
-            <label for="features">Vector de features:</label>
-            <textarea id="features" placeholder="1.2, 3.4, 5.6"></textarea>
+    <div class="output-section box">
+        <h3>Indicadores Técnicos</h3>
+        <div id="advanced-cards"></div>
+    </div>
 
-            <label for="horizon">Horizonte:</label>
-            <select id="horizon">
-                <option value="1">1 día</option>
-                <option value="5">5 días</option>
-                <option value="10">10 días</option>
-                <option value="30">30 días</option>
-            </select>
+    <div class="output-section box">
+        <h3>Gráficos</h3>
+        <canvas id="chartCanvas" width="400" height="200"></canvas>
+    </div>
 
-            <button id="predict-btn">Generar señal</button>
-        </div>
+    <div class="output-section box">
+        <h3>Sparkline</h3>
+        <canvas id="sparkCanvas" class="sparkline"></canvas>
+    </div>
 
-        <div class="input-section box">
-            <h3>Subir Dataset (CSV)</h3>
-            <input type="file" id="datasetInput" accept=".csv">
-            <button id="upload-btn">Subir Dataset</button>
-        </div>
+</main>
 
-        <div class="input-section box">
-            <h3>Analizar Ticker</h3>
-            <input type="text" id="tickerInput" placeholder="AAPL, TSLA, MSFT">
-            <button id="ticker-btn">Analizar Ticker</button>
+<footer>
+    <p class="powered-by">
+        Powered by <span class="footer-name">Lycan</span> <span class="footer-eabs">(EABS)</span>
+    </p>
 
-            <div class="advanced-options">
-                <label><input type="checkbox" id="show-cards"> Mostrar tarjetas avanzadas</label>
-                <label><input type="checkbox" id="show-charts"> Mostrar gráficos</label>
-                <label><input type="checkbox" id="show-spark"> Mostrar sparkline</label>
-                <label><input type="checkbox" id="show-panel"> Panel Bloomberg</label>
-            </div>
-        </div>
+    <p id="disclaimer" class="disclaimer">
+        ⚠️ Nota importante: Los modelos entrenados aquí NO garantizan ganancias en la bolsa.
+        El mercado financiero es volátil y no estacionario.
+        Cualquier decisión de inversión debe hacerse con responsabilidad personal.
+    </p>
+</footer>
 
-        <div class="output-section box">
-            <h3>Predicción</h3>
-            <div id="prediction-box"></div>
-        </div>
-
-        <div class="signal-section box">
-            <h3>Señal</h3>
-            <div id="signal-box"></div>
-        </div>
-
-        <div class="output-section box">
-            <h3>Resultados</h3>
-            <div id="results"></div>
-        </div>
-
-        <div class="output-section box">
-            <h3>Indicadores Técnicos</h3>
-            <div id="advanced-cards"></div>
-        </div>
-
-        <div class="output-section box">
-            <h3>Gráficos</h3>
-            <canvas id="chartCanvas" width="400" height="200"></canvas>
-        </div>
-
-        <div class="output-section box">
-            <h3>Sparkline</h3>
-            <canvas id="sparkCanvas" class="sparkline"></canvas>
-        </div>
-
-    </main>
-
-    <!-- ================= FOOTER ================= -->
-    <footer>
-        <p class="powered-by">
-            Powered by <span class="footer-name">Lycan</span> <span class="footer-eabs">(EABS)</span>
-        </p>
-
-        <p id="disclaimer" class="disclaimer">
-            ⚠️ Nota importante: Los modelos entrenados aquí NO garantizan ganancias en la bolsa.
-            El mercado financiero es volátil y no estacionario.
-            Cualquier decisión de inversión debe hacerse con responsabilidad personal.
-        </p>
-    </footer>
-
-    <script src="script.js"></script>
-    <script src="translations.js"></script>
+<script src="script.js"></script>
+<script src="translations.js"></script>
 
 </body>
 </html>

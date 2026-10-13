@@ -64,12 +64,14 @@ header h1 {
 .ticker-content {
     display: inline-block;
     white-space: nowrap;
+    position: relative;
     animation: tickerMove 180s linear infinite;
+    will-change: transform;
 }
 
 @keyframes tickerMove {
     0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    100% { transform: translateX(-200%); }
 }
 
 .ticker-item {
@@ -237,14 +239,12 @@ button:hover {
 }
 
 /* ================= BLOOMBERG SIDE PANEL ================= */
-
-/* Oculto por defecto */
 #side-panel {
     position: fixed;
     right: -280px;
     top: 80px;
     width: 280px;
-    height: calc(100% - 160px); /* ← antes era 100px, ahora deja espacio para el footer */
+    height: calc(100% - 160px);
     background: rgba(0,0,0,0.85);
     border-left: 2px solid #00ffff;
     padding: 20px;
@@ -254,12 +254,10 @@ button:hover {
     display: none;
 }
 
-/* Activo cuando el usuario lo habilita */
 #side-panel.active {
     display: block;
 }
 
-/* Hover: desliza */
 #side-panel.active:hover {
     right: 0;
 }

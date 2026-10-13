@@ -1,13 +1,11 @@
 // ================= LANGUAGE SYSTEM =================
 
-// Cargar idioma guardado al iniciar
 document.addEventListener("DOMContentLoaded", () => {
     const savedLang = localStorage.getItem("marketpulse-lang") || "en";
     document.getElementById("language").value = savedLang;
     applyLanguage(savedLang);
 });
 
-// Fade helper
 function fadeLanguageChange() {
     const elements = [
         document.querySelector("h1"),
@@ -60,7 +58,6 @@ function applyLanguage(lang) {
     fadeLanguageChange();
 }
 
-// Guardar idioma cuando el usuario lo cambia
 document.getElementById("language").addEventListener("change", (e) => {
     const lang = e.target.value;
     localStorage.setItem("marketpulse-lang", lang);
@@ -68,21 +65,19 @@ document.getElementById("language").addEventListener("change", (e) => {
 });
 
 // ================= BACKEND URL =================
+
 const API_BASE = "https://marketpulse-ancient-songbird-5565.fly.dev";
 
-// ================= TICKER BAR =================
+// ================= TICKER =================
 
 async function loadTicker() {
     try {
-        const url = `${API_BASE}/ticker/`;
-        const response = await fetch(url);
-
+        const response = await fetch(`${API_BASE}/ticker/`);
         let data = null;
 
         if (response.ok) {
             data = await response.json();
-
-            if (data && data.data && data.data.length > 0) {
+            if (data?.data?.length > 0) {
                 localStorage.setItem("marketpulse-ticker", JSON.stringify(data.data));
             }
         }
@@ -92,12 +87,14 @@ async function loadTicker() {
             if (cached) {
                 data = { data: JSON.parse(cached) };
             } else {
-                console.warn("Sin datos y sin cache, manteniendo ticker actual");
+                console.warn("Ticker vacío y sin cache");
                 return;
             }
         }
 
         const tickerBox = document.getElementById("ticker-content");
+        tickerBox.innerHTML = "";
+
         const fragment = document.createDocumentFragment();
 
         data.data.forEach(stock => {
@@ -105,59 +102,55 @@ async function loadTicker() {
                 stock.price ??
                 stock.close ??
                 stock.last ??
-                stock.regularMarketPrice ??
-                stock["05. price"] ??
+                stock.value ??
                 null;
 
-            if (!price || price === 0) return;
-            if (stock.symbol === "SQ") return;
+            const safePrice = price ? price.toFixed(2) : "--";
 
-            const span = document.createElement("span");
-            span.className = "ticker-item";
-            span.textContent = `${stock.symbol} $${price}`;
-            fragment.appendChild(span);
+            const change = stock.change ?? 0;
+            const isUp = change >= 0;
+
+            const item = document.createElement("span");
+            item.className = "ticker-item";
+            item.classList.add(isUp ? "up" : "down");
+
+            item.textContent = `${stock.symbol} $${safePrice} (${change.toFixed(2)})`;
+
+            fragment.appendChild(item);
         });
 
-        if (!fragment.children.length) {
-            console.warn("Fragmento vacío, manteniendo ticker actual");
-            return;
-        }
+        const loop = document.createDocumentFragment();
+        loop.appendChild(fragment.cloneNode(true));
+        loop.appendChild(fragment.cloneNode(true));
 
-        const loopFragment = document.createDocumentFragment();
-        loopFragment.appendChild(fragment.cloneNode(true));
-        loopFragment.appendChild(fragment.cloneNode(true));
+        tickerBox.appendChild(loop);
 
-        tickerBox.innerHTML = "";
-        tickerBox.appendChild(loopFragment);
+        const tickerContent = document.querySelector(".ticker-content");
+        tickerContent.style.animation = "none";
+        void tickerContent.offsetWidth;
+        tickerContent.style.animation = "tickerMove 180s linear infinite";
 
-        const tickerContainer = document.querySelector(".ticker-bar");
-        if (tickerContainer) {
-            tickerContainer.style.animationDuration = "180s";
-        }
-
-    } catch (error) {
-        console.error("Error cargando ticker:", error);
+    } catch (err) {
+        console.error("Ticker error:", err);
     }
 }
 
 loadTicker();
-setInterval(loadTicker, 10000);
+setInterval(loadTicker, 15000);
 
 // ================= BACKEND INTEGRATION =================
 
-// --- Predicción simple ---
 async function fetchPrediction(ticker) {
-    const res = await fetch(`${API_BASE}/predict-regression/${ticker}`);
+    const res = await fetch(`${API_BASE}/model/predict-regression/${ticker}`);
     return await res.json();
 }
 
-// --- Análisis completo ---
 async function fetchAnalysis(ticker) {
     const res = await fetch(`${API_BASE}/analyze/${ticker}`);
     return await res.json();
 }
 
-// ================= NEW FEATURE: UPLOAD DATASET =================
+// ================= UPLOAD DATASET =================
 
 async function uploadDataset() {
     const fileInput = document.getElementById("datasetInput");
@@ -186,7 +179,7 @@ async function uploadDataset() {
     }
 }
 
-// ================= NEW FEATURE: ANALYZE TICKER =================
+// ================= ANALYZE TICKER =================
 
 async function analyzeTicker() {
     const ticker = document.getElementById("tickerInput").value.trim();
@@ -199,18 +192,23 @@ async function analyzeTicker() {
     try {
         const data = await fetchAnalysis(ticker);
 
-        // Mostrar JSON crudo
         document.getElementById("results").innerHTML =
             `<pre>${JSON.stringify(data, null, 2)}</pre>`;
 
-        // Mostrar tarjetas avanzadas si el usuario quiere
         if (document.getElementById("show-cards").checked) {
             renderAdvancedCards(data);
         }
 
-        // Mostrar gráficos si el usuario quiere
         if (document.getElementById("show-charts").checked) {
             renderCharts(data);
+        }
+
+        if (document.getElementById("show-spark").checked) {
+            renderSparkline(data);
+        }
+
+        if (document.getElementById("show-panel").checked) {
+            renderSidePanel(data);
         }
 
     } catch (error) {
@@ -222,7 +220,7 @@ async function analyzeTicker() {
 // ================= PREDICT BUTTON =================
 
 document.getElementById("predict-btn").addEventListener("click", async () => {
-    const ticker = document.getElementById("ticker-input").value.trim();
+    const ticker = document.getElementById("tickerInput").value.trim();
 
     if (!ticker) {
         alert("Escribe un ticker, ej: AAPL");
@@ -242,57 +240,6 @@ document.getElementById("predict-btn").addEventListener("click", async () => {
 });
 
 // ================= ADVANCED CARDS =================
-
-function renderAdvancedCards(data) {
-    const container = document.getElementById("advanced-cards");
-    container.innerHTML = `
-        <div class="card">
-            <h3>RSI (14)</h3>
-            <p>${data.rsi_14?.toFixed(2)}</p>
-        </div>
-        <div class="card">
-            <h3>MACD</h3>
-            <p>${data.macd?.toFixed(4)}</p>
-        </div>
-        <div class="card">
-            <h3>Signal MACD</h3>
-            <p>${data.signal_macd?.toFixed(4)}</p>
-        </div>
-        <div class="card">
-            <h3>Momentum (10)</h3>
-            <p>${data.momentum_10?.toFixed(4)}</p>
-        </div>
-    `;
-}
-
-// ================= CHARTS =================
-
-function renderCharts(data) {
-    const ctx = document.getElementById("chartCanvas").getContext("2d");
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: ["RSI", "MACD", "Signal", "Momentum"],
-            datasets: [{
-                label: "Indicadores Técnicos",
-                data: [
-                    data.rsi_14,
-                    data.macd,
-                    data.signal_macd,
-                    data.momentum_10
-                ],
-                borderColor: "cyan",
-                backgroundColor: "rgba(0,255,255,0.2)"
-            }]
-        }
-    });
-}
-
-// ================= BUTTON EVENTS =================
-
-document.getElementById("upload-btn").addEventListener("click", uploadDataset);
-document.getElementById("ticker-btn").addEventListener("click", analyzeTicker);
 
 function renderAdvancedCards(data) {
     const container = document.getElementById("advanced-cards");
@@ -322,6 +269,32 @@ function renderAdvancedCards(data) {
     });
 }
 
+// ================= CHARTS =================
+
+function renderCharts(data) {
+    const ctx = document.getElementById("chartCanvas").getContext("2d");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: ["RSI", "MACD", "Signal", "Momentum"],
+            datasets: [{
+                label: "Indicadores Técnicos",
+                data: [
+                    data.rsi_14,
+                    data.macd,
+                    data.signal_macd,
+                    data.momentum_10
+                ],
+                borderColor: "cyan",
+                backgroundColor: "rgba(0,255,255,0.2)"
+            }]
+        }
+    });
+}
+
+// ================= SPARKLINE =================
+
 function renderSparkline(data) {
     const ctx = document.getElementById("sparkCanvas").getContext("2d");
 
@@ -348,6 +321,8 @@ function renderSparkline(data) {
     });
 }
 
+// ================= SIDE PANEL =================
+
 function renderSidePanel(data) {
     const panel = document.getElementById("side-content");
 
@@ -360,3 +335,8 @@ function renderSidePanel(data) {
         <div class="side-item"><strong>Momentum:</strong> ${data.momentum_10.toFixed(4)}</div>
     `;
 }
+
+// ================= BUTTON EVENTS =================
+
+document.getElementById("upload-btn").addEventListener("click", uploadDataset);
+document.getElementById("ticker-btn").addEventListener("click", analyzeTicker);
